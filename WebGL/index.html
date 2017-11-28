@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<title>Change</title>
+<meta http-equiv='content-type' content='text/html; charset=utf-8' />
+<!-- script src='vendor/require.js' data-main='config.js'></script -->
+<script src='vendor/jquery.js'></script>
+<script src='vendor/three.js'></script>
+<script src='js/Objects/tree.js'></script>
+<style> 
+    * {
+        margin: 0;
+        border: 0;
+        padding: 0;
+    }
+</style>
+</head>
+<body>
+    <div id='header' >
+        <button> Select a sketch: </button>
+        <div id='sketch_list'> 
+            <ul>
+                <li> <a href='js/Sketches/basic.html'> Basic </a> </li>
+                <li> <a href='js/Sketches/geometry.html'> Geometry </a> </li>
+		<li> <a href='js/Sketches/trunk.html'>Rotation around an arbitrary axis</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id='output'>
+    </div>
+    <script type='text/javascript'>        
+        /*
+        $.ajax({
+            type: 'GET',
+            url: 'servlets/ScriptServlet',
+            contentType: 'application/json',
+            success: function(obj) {
+                console.log(obj);
+                $.ajax({
+                   type: 'GET',
+                   url: 'servlets/ScriptServlet?sketch=Example.js',
+                   contentType: 'application/json',
+                   success: function(data) {
+                       console.log(data)
+                   },
+                   error: function() { 
+                       alert('didn\'t get data');
+                   }
+                });
+            },
+            error: function() {
+                alert('err'); 
+            }
+        });
+        */
+    </script>
+    <!-- script type='text/javascript'> 
+        for (var x = 0; x < 300; x++)
+            $('#header').append('<li><a href=\"#">' + (x+1) + '</a></li>');
+        $.ajax({
+            type: 'GET',
+            url: 'servlets/FunctionServlet',
+            contentType: 'application/json',
+            success: function(obj) { 
+                console.log(obj); 
+                console.log(new Date());
+                fn = Function(obj.title);
+                console.log(new Date());
+                fn();
+                console.log(new Date());
+            },
+            error: function() { 
+                alert('err'); 
+            }
+        });
+    </script -->
+</body>
+</html>

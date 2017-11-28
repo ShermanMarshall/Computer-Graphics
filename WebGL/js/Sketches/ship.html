@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<title>Change</title>
+<meta http-equiv='content-type' content='text/html; charset=utf-8' />
+<script src='../../vendor/jquery.js'></script>
+<script src='../../vendor/three.js'></script>
+<script src='../Objects/utils.js'></script>
+<script src='../Objects/tree.js'></script>
+
+</head>
+<body>
+    <div id='output'>
+    </div>
+    <script type='text/javascript'>    
+        var rad = Math.PI/180;
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        $('#output').append(renderer.domElement);
+        
+        renderer.setClearColor(0xFFFFFF);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        var helper = new THREE.AxisHelper(20);      
+        scene.position.set(-25,25,20);
+              
+        scene.add(helper);       
+        
+        var array = [], originals = [];
+     	for (var x = 0; x < 100; x++) {
+     		var sphereGeometry = new THREE.SphereGeometry(1,36,36);
+     	    var sphereMaterial = new THREE.MeshBasicMaterial({
+     	        color: 0xFF6F37, wireframe: false});
+     	    var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+     	    var sign =  (Math.random() * 2 > 1) ? 1 : -1;
+     	    sphere.position.x = (Math.random() * 20) * sign;
+     	    	sign = (Math.random() * 2 > 1) ? 1 : -1;
+     	    sphere.position.y = (Math.random() * 10) * sign;
+     	    	sign = (Math.random() * 2 > 1) ? 1 : -1;
+     	    sphere.position.z = (Math.random() * 10) * sign;
+			array.push(sphere);
+			originals.push(sphere.position);
+     	    scene.add(sphere);
+     	}
+        
+        camera.position.x = -30;
+        camera.position.y = 40;
+        camera.position.z = 30;
+        camera.lookAt({ x: 00, y: 00, z: 0 });
+        
+        function render() {
+            for (var x = 0; x < array.length; x++) { 
+            	var sphere = array[x];
+            	var sign =  (Math.random() * 2 > 1) ? 1 : -1;
+            	
+            	if (true) { 
+         	   		//console.log()
+	         	    sphere.position.x += -0.001; //Math.random() * sign;
+	         	    	sign = (Math.random() * 2 > 1) ? 1 : -1;
+	         	    sphere.position.y += 0.001; //Math.random() * sign;
+	         	    	sign = (Math.random() * 2 > 1) ? 1 : -1;
+	         	    sphere.position.z += 0.001; //Math.random() * sign;
+            	}
+         	   	
+            }
+            
+            //if (((step % 5).toFixed(2) / 5) === 0)
+    		//camera.lookAt(new THREE.Vector3(Math.random() * (10 * Math.random()), Math.random() * (10 * Math.random()), Math.random() * (10 * Math.random())));
+            requestAnimationFrame(render);
+            //Iteratively render the scene
+            renderer.render(scene, camera); 
+        }
+        render();
+    </script>
+</body>
+</html>

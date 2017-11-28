@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<title>Change</title>
+<meta http-equiv='content-type' content='text/html; charset=utf-8' />
+<script src='../../vendor/jquery.js'></script>
+<script src='../../vendor/three.js'></script>
+<script src='../Objects/utils.js'></script>
+<script src='../Objects/tree.js'></script>
+
+</head>
+<body>
+    <div id='output'>
+    </div>
+    <script type='text/javascript'>    
+        var rad = Math.PI/180;
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        $('#output').append(renderer.domElement);
+        
+        renderer.setClearColor(0xFFFFFF);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        var helper = new THREE.AxisHelper(20);      
+        scene.position.set(-25,25,20);
+    </script>
+</body>
+</html>
