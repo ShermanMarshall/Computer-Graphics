@@ -17,7 +17,6 @@ char* readFile(const char* filename) {
 	//If file was opened
 	if (filePtr) {
 		size_t bytesRead;
-
 		do {	//Read
 			bytesRead = fread(data, 1, MAX_READ, filePtr);
 			if (bytesRead > 0) {
@@ -60,6 +59,7 @@ char* readFile(const char* filename) {
 		fclose(filePtr);
 		return data;
 	}
+	printf("File failed to load\n");
 	return NULL;
 }
 
