@@ -63,9 +63,7 @@ char* readFile(const char* filename) {
 	return NULL;
 }
 
-/*
 int main() {
-	char* str = readFile("oneGbOfCaps.txt");
+	char* str = readFile("fileToReadGoesHere");
 	printf("%s\n", str);
 }
-*/
