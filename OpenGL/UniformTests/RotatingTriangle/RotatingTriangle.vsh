@@ -7,6 +7,7 @@ out vec3 colorvarying;
 
 //Input uniform specifying 
 uniform float val;
+uniform ivec4 vectorTest;
 
 void main(){
 
@@ -17,6 +18,6 @@ void main(){
 
     gl_Position = vec4(vertexPosition_modelspace * A, 1);
 
-    colorvarying = vec3(1, 0, 0); 
+    colorvarying = vectorTest.xyz; 
 }
 
