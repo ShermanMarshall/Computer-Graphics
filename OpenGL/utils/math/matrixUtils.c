@@ -7,15 +7,24 @@ Vector* newVector() {
 	vector->x = 0.0f;
 	vector->y = 0.0f;
 	vector->z = 0.0f;
+
+	vector->free = &freeVectorMemory;
 	return vector;
 }
 
 Vector* initNewVector(float x, float y, float z) {
-	Vector* vector = (Vector*) malloc(sizeof(Vector));
+	Vector* vector = newVector();
+
 	vector->x = x;
 	vector->y = y;
 	vector->z = z;
+
 	return vector;
+}
+
+void freeVectorMemory (void* vector) {
+	Vector* ptr = (Vector*) vector;
+	free(ptr);
 }
 
 typedef struct {

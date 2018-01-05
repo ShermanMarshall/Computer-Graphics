@@ -1,16 +1,20 @@
 #include "math.h"
 #define DEGREES_TO_RADIANS 0.0174532889
 
-//Generic Matrix definitions
-typedef struct {
-        float x;
-        float y;
-        float z;
+typdef struct {
+	float x;
+	float y;
+	float z;
+
+	void (* free)(void*);
 } Vector;
 
 //Vector initializing prototypes
 Vector* newVector(void);
 Vector* initNewVector(float, float, float);
+
+//Vector
+void freeVectorMemory(VectorData*);
 
 typedef struct {
 	float mat[4][4];
@@ -23,14 +27,18 @@ typedef struct {
 //Matrix struct typedefs
 typedef struct {
 	float mat[4][4];
+
 	void (* multiplyVector)(Vector*);
 	void (* multiplyMat4)(Mat4Data*);
+	void (* free)(void*);
 } Mat4;
 
 typedef struct {
 	float mat[3][3];
+
 	void (* multiplyVector)(Vector*);
 	void (* multiplyMat3)(Mat3Data*);
+	void (* free)(void*);
 } Mat3;
 
 //Affine Transformation prototypes
