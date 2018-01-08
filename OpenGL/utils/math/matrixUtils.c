@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "matrixUtils.h"
 
 Vector* newVector() {
@@ -7,6 +8,7 @@ Vector* newVector() {
 	vector->x = 0.0f;
 	vector->y = 0.0f;
 	vector->z = 0.0f;
+	vector->w = 0.0f;
 
 	vector->free = &freeVectorMemory;
 	return vector;
@@ -18,6 +20,7 @@ Vector* initNewVector(float x, float y, float z) {
 	vector->x = x;
 	vector->y = y;
 	vector->z = z;
+	vector->w = 1.0f;
 
 	return vector;
 }
@@ -51,6 +54,64 @@ typedef struct {
 	//Using singleton, probably unnecessary
 	//void (* free)();
 } AffineTransformation;
+
+void mat4Transpose(Mat4Data* mat) {
+	float data[4][4];
+	
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
+			data[y][x] = mat->mat[x][y];
+		}
+	}
+	memcpy(mat->mat, data, sizeof(mat->mat));
+}
+
+void mat3Transpose(Mat3Data* mat) {
+	float data[3][3];
+	for (int x = 0; x < 3; x++) {
+		for (int y = 0; y < 3; y++) {
+			data[y][x] = mat->mat[x][y];
+		}
+	}
+	memcpy(mat->mat, data, sizeof(mat->mat));
+}
+
+Vector* multiplyVector(Mat4Data* data, Vector* vector) {
+	Vector* retVal = newVector();
+	//output
+	float vectorData[4] = {0};
+	float* input = (float*) vector;
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
+			vectorData[x] += input[y] * data->mat[x][y];
+		}
+	}
+	return memcpy(retVal, vectorData, sizeof(Vector));
+}
+
+Mat4Data* multiplyMat4(Mat4Data* thisMat, Mat4Data* thatMat) {
+	Mat4* mat4 = newMat4();
+	//This is multiplied right
+	//The output should be y then x
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
+			for (int z = 0; z < 4; z++) {
+				mat4->mat[x][y] += thisMat->mat[x][z] * thatMat->mat[z][y];
+			}
+		}
+	}
+	return mat4;
+}
+
+Mat4* newMat4() {
+	Mat4* mat4 = (Mat4*) malloc(sizeof(Mat4));
+	memset(mat4->mat, 0, sizeof(Mat4));
+
+	mat4->multiplyVector = &multiplyVector;
+	mat4->multiplyMat4 = &multiplyMat4;
+
+	return mat4;
+}
 
 /**
  * 	For rotating position vectors around the X axis
@@ -177,7 +238,7 @@ AffineTransformation* identityMatrixCopy() {
 	return identityComponents;
 }
 
-int main() {
+int mainy() {
 	Vector* v = newVector();
 	AffineTransformation* at = newTranslation(0, 1, 0);
 
@@ -244,4 +305,34 @@ int main() {
 
 	at->rotateZ(v, -30.0f);
 	printf("X: %.2f, Y: %.2f, Z: %.2f\n", v->x, v->y, v->z);
+}
+
+int main() {
+	Mat4* rowMajor = newMat4();
+	Mat4* columnMajor = newMat4();
+	
+	rowMajor->mat[0][0] = 1.0f;
+	rowMajor->mat[1][1] = 1.0f;
+	rowMajor->mat[2][2] = 1.0f;
+	rowMajor->mat[3][3] = 1.0f;
+
+	columnMajor->mat[3][0] = 2.0f;
+	columnMajor->mat[3][1] = 2.0f;
+	columnMajor->mat[3][2] = 2.0f;
+
+	printf("initial mats\n");
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
+			printf("%.2f\n", rowMajor->mat[x][y]);
+			printf("%.2f\n", columnMajor->mat[x][y]);
+		}
+	}
+
+	printf("product\n");
+	Mat4* retVal = rowMajor->multiplyMat4(rowMajor, columnMajor);
+	for (int y = 0; y < 4; y++) {
+		for (int x = 0; x < 4; x++) {
+			printf("%.2f\n", retVal->mat[x][y]);
+		}
+	}
 }
