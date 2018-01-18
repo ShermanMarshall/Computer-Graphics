@@ -36,24 +36,29 @@ typedef struct {
 //Matrix struct typedefs
 typedef struct {
 	float mat[4][4];
-	Vector* (* multiplyVector)(Mat4Data*, Vector*);
-	Mat4Data* (* multiplyMat4)(Mat4Data*, Mat4Data*);
+	//Vector* (* multiplyVector)(Mat4Data*, Vector*);
+	//Mat4Data* (* multiplyMat4)(Mat4Data*, Mat4Data*);
 	void (* transpose)(Mat4Data*);
 	void (* free)(void*);
 } Mat4;
 
 Mat4* newMat4(void);
 Mat4* initNewMat4(float[4][4]);
-Mat4Data* multiplyMat4(Mat4Data*, Mat4Data*);
-Vector* multiplyVector(Mat4Data*, Vector*);
+Mat4* multiplyMat4(Mat4Data*, Mat4Data*);
 
 typedef struct {
 	float mat[3][3];
-	void (* multiplyVector)(Mat3Data*, Vector*);
-	void (* multiplyMat3)(Mat3Data*, Mat3Data*);
-	void (* transpose)(Mat3Data);
+	//void (* multiplyVector)(Mat3Data*, Vector*);
+	//void (* multiplyMat3)(Mat3Data*, Mat3Data*);
+	void (* transpose)(Mat3Data*);
 	void (* free)(void*);
 } Mat3;
+
+Mat3* newMat3(void);
+Mat3* initNewMat3(float[4][4]);
+Mat3Data* multiplyMat3(Mat3Data*, Mat3Data*);
+
+Vector* multiplyVector(Mat4Data*, Vector*);
 
 //Affine Transformation prototypes
 void rotateX(Vector*, float);

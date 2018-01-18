@@ -2,13 +2,10 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <glfw3.h>
-#include <loadShaders.h>
+#include </usr/local/include/loadShaders>
+#include </usr/local/include/utils/math/matrixUtils.c>
 
 GLFWwindow* window;
-
-typedef struct {
-	int set[4];
-} Vector;
 
 int main( void )
 {
@@ -81,19 +78,23 @@ int main( void )
 
 	GLuint uIdx = glGetUniformLocation(programID, "val");
 	GLuint vectorTest = glGetUniformLocation(programID, "vectorTest");
-	
+	GLuint matrixTest = glGetUniformLocation(programID, "zrotation");
+
 	GLint uniSize;
 
 	glGetActiveUniformBlockiv(programID, uIdx, GL_UNIFORM_BLOCK_DATA_SIZE, &uniSize);
 	glGetActiveUniformBlockiv(programID, vectorTest, GL_UNIFORM_BLOCK_DATA_SIZE, &uniSize);
+	glGetActiveUniformBlockiv(programID, matrixTest, GL_UNIFORM_BLOCK_DATA_SIZE, &uniSize);
 
 	GLfloat val = 0.0f;
 	Vector* v = (Vector*) malloc(sizeof(Vector));
 
-	v->set[0] = 1;
-	v->set[1] = 1;
-	v->set[2] = 1;
-	v->set[3] = 1;
+	v->x = 1;
+	v->y = 1;
+	v->z = 1;
+	v->w = 1;
+
+	Mat3* mat3 = newMat3();
 	
 	do {
 		// Clear the screen
@@ -118,6 +119,14 @@ int main( void )
 
 		glUniform1f(uIdx, val);
 		glUniform4iv(vectorTest, 1, (int*) v);
+
+		memset(mat3->mat, 0, sizeof(GLfloat) * 9);
+		mat3->mat[0][0] = cos(val);
+		mat3->mat[1][0] = sin(val);
+		mat3->mat[0][1] = -sin(val);
+		mat3->mat[1][1] = cos(val);
+
+		glUniformMatrix3fv(matrixTest, 1, GL_TRUE, (GLfloat*) mat3->mat);
 		glDrawArrays(GL_TRIANGLES, 0, 9/3);
 
 		glDisableVertexAttribArray(0);

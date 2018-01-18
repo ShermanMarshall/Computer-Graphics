@@ -44,20 +44,103 @@ typedef struct {
 	Mat4* (* getMat4ZRotation)(float);
 	Mat4* (* getMat4WRotation)(float);
 	Mat4* (* getMat4Translation)(float,float,float);
+	Mat4* (* multiplyMat4)(Mat4Data*,Mat4Data*);
+	void  (* multiplyVector4)(Mat4*,Vector*);
 	
 	Mat3* (* getMat3XRotation)(float);
 	Mat3* (* getMat3YRotation)(float);
 	Mat3* (* getMat3ZRotation)(float);
 	Mat3* (* getMat3WRotation)(float);
 	Mat3* (* getMat3Translation)(float,float,float);
+	Mat3* (* multiplyMat3)(Mat3Data*,Mat3Data*);
+	void  (* multiplyVector3)(Mat3*,Vector*);
 
 	//Using singleton, probably unnecessary
 	//void (* free)();
 } AffineTransformation;
 
-void mat4Transpose(Mat4Data* mat) {
-	float data[4][4];
+Mat4* getMat4ZRotation(float angle) {
+	Mat4* mat4 = newMat4();
+	angle *= DEGREES_TO_RADIANS;
+
+	mat4->mat[0][0] = cos(angle);
+	mat4->mat[0][1] = -sin(angle);
+	mat4->mat[0][1] = sin(angle);
+	mat4->mat[1][1] = cos(angle);
+	mat4->mat[2][2] = 1.0f;
 	
+	return mat4;
+}
+
+Mat3* getMat3ZRotation(float angle) {
+	Mat3* mat3 = newMat3();
+	angle *= DEGREES_TO_RADIANS;
+
+	mat3->mat[0][0] = cos(angle);
+	mat3->mat[0][1] = -sin(angle);
+	mat3->mat[0][1] = sin(angle);
+	mat3->mat[1][1] = cos(angle);
+	mat3->mat[2][2] = 1.0f;
+
+	return mat3;
+}
+
+Mat4* getMat4XRotation(float angle) {
+	Mat4* mat4 = newMat4();
+	angle *= DEGREES_TO_RADIANS;
+
+	mat4->mat[0][0] = 1.0f;
+	mat4->mat[1][1] = cos(angle);
+	mat4->mat[2][1] = -sin(angle);
+	mat4->mat[1][2] = sin(angle);
+	mat4->mat[2][2] = cos(angle);
+
+	return mat4;
+}
+
+Mat3* getMat3XRotation(float angle) {
+	Mat3* mat3 = newMat3();
+	angle *= DEGREES_TO_RADIANS;
+	
+	mat3->mat[0][0] = 1.0f;
+	mat3->mat[1][1] = cos(angle);
+	mat3->mat[2][1] = -sin(angle);
+	mat3->mat[1][2] = sin(angle);
+	mat3->mat[2][2] = cos(angle);
+	
+	return mat3;
+}
+
+Mat4* getMat4YRotation(float angle) {
+	Mat4* mat4 = newMat4();
+	angle *= DEGREES_TO_RADIANS;
+
+	mat4->mat[0][0] = cos(angle);
+	mat4->mat[0][1] = 0.0f;
+	mat4->mat[0][2] = sin(angle);
+	mat4->mat[1][1] = 1.0f;
+	mat4->mat[0][2] = -sin(angle);
+	mat4->mat[2][2] = cos(angle);
+	
+	return mat4;
+}
+
+Mat3* getMat3YRotation(float angle) {
+	Mat3* mat3 = newMat3();
+	angle *= DEGREES_TO_RADIANS;
+
+	mat3->mat[0][0] = cos(angle);
+	mat3->mat[0][1] = 0.0f;
+	mat3->mat[0][2] = sin(angle);
+	mat3->mat[1][1] = 1.0f;
+	mat3->mat[0][2] = -sin(angle);
+	mat3->mat[2][2] = cos(angle);
+
+	return mat3;
+}
+
+void mat4Transpose(Mat4Data* mat) {
+	float data[4][4] = {0};
 	for (int x = 0; x < 4; x++) {
 		for (int y = 0; y < 4; y++) {
 			data[y][x] = mat->mat[x][y];
@@ -66,8 +149,13 @@ void mat4Transpose(Mat4Data* mat) {
 	memcpy(mat->mat, data, sizeof(mat->mat));
 }
 
+void mat4Free(void* mat) {
+	Mat4* mat4 = (Mat4*) mat;
+	free(mat4);
+}
+
 void mat3Transpose(Mat3Data* mat) {
-	float data[3][3];
+	float data[3][3] = {0};
 	for (int x = 0; x < 3; x++) {
 		for (int y = 0; y < 3; y++) {
 			data[y][x] = mat->mat[x][y];
@@ -76,7 +164,12 @@ void mat3Transpose(Mat3Data* mat) {
 	memcpy(mat->mat, data, sizeof(mat->mat));
 }
 
-Vector* multiplyVector(Mat4Data* data, Vector* vector) {
+void mat3Free(void* mat) {
+	Mat3* mat3 = (Mat3*) mat;
+	free(mat3);
+}
+
+Vector* multiplyMat4Vector(Mat4Data* data, Vector* vector) {
 	Vector* retVal = newVector();
 	//output
 	float vectorData[4] = {0};
@@ -86,11 +179,24 @@ Vector* multiplyVector(Mat4Data* data, Vector* vector) {
 			vectorData[x] += input[y] * data->mat[x][y];
 		}
 	}
-	return memcpy(retVal, vectorData, sizeof(Vector));
+	return (Vector*)  memcpy(retVal, vectorData, sizeof(Vector));
 }
 
-Mat4Data* multiplyMat4(Mat4Data* thisMat, Mat4Data* thatMat) {
-	Mat4* mat4 = newMat4();
+Vector* multiplyMat3Vector(Mat3Data* data, Vector* vector) {
+	Vector* retVal = newVector();
+	//output
+	float vectorData[4] = {0};
+	float* input = (float*) vector;
+	for (int x = 0; x < 3; x++) {
+		for (int y = 0; y < 3; y++) {
+			vectorData[x] += input[y] * data->mat[x][y];
+		}
+	}
+	return (Vector*) memcpy(retVal, vectorData, sizeof(Vector));
+}
+
+Mat4* multiplyMat4(Mat4Data* thisMat, Mat4Data* thatMat) {
+	Mat4Data* mat4 = (Mat4Data*) newMat4();
 	//This is multiplied right
 	//The output should be y then x
 	for (int x = 0; x < 4; x++) {
@@ -100,17 +206,43 @@ Mat4Data* multiplyMat4(Mat4Data* thisMat, Mat4Data* thatMat) {
 			}
 		}
 	}
-	return mat4;
+	return (Mat4*) mat4;
+}
+
+Mat3Data* multiplyMat3(Mat3Data* thisMat, Mat3Data* thatMat) {
+	Mat3Data* mat3 = (Mat3Data*) newMat3();
+	for (int x = 0; x < 3; x++) {
+		for (int y = 0; y < 3; y++) {
+			for (int z = 0; z < 3; z++) {
+				mat3->mat[x][y] += thisMat->mat[x][z] * thatMat->mat[z][y];
+			}
+		}
+	}
+	return mat3;
 }
 
 Mat4* newMat4() {
 	Mat4* mat4 = (Mat4*) malloc(sizeof(Mat4));
 	memset(mat4->mat, 0, sizeof(Mat4));
 
-	mat4->multiplyVector = &multiplyVector;
-	mat4->multiplyMat4 = &multiplyMat4;
+	//mat4->multiplyVector = &multiplyMat4Vector;
+	//mat4->multiplyMat4 = &multiplyMat4;
+	mat4->transpose = &mat4Transpose;
+	mat4->free = &mat4Free;
 
 	return mat4;
+}
+
+Mat3* newMat3() {
+	Mat3* mat3 = (Mat3*) malloc(sizeof(Mat3));
+	memset(mat3->mat, 0, sizeof(Mat3));
+	
+	//mat3->multiplyVector = &multiplyMat3Vector;
+	//mat3->multiplyMat3 = &multiplyMat3;
+	mat3->transpose = &mat3Transpose;
+	mat3->free = &mat3Free;
+
+	return mat3;
 }
 
 /**
@@ -229,6 +361,15 @@ AffineTransformation* getAffineTransformation() {
 		at->rotateX = &rotateX;
 		at->rotateY = &rotateY;
 		at->rotateZ = &rotateZ;
+
+		at->getMat4XRotation = &getMat4XRotation;
+		at->getMat4YRotation = &getMat4YRotation;
+		at->getMat4ZRotation = &getMat4ZRotation;
+		at->multiplyMat4     = &multiplyMat4;
+
+		at->getMat3XRotation = &getMat3XRotation;
+		at->getMat3YRotation = &getMat3YRotation;
+		at->getMat3ZRotation = &getMat3ZRotation;
 	}
 	return at;
 }
@@ -306,7 +447,7 @@ int mainy() {
 	at->rotateZ(v, -30.0f);
 	printf("X: %.2f, Y: %.2f, Z: %.2f\n", v->x, v->y, v->z);
 }
-
+/*
 int main() {
 	Mat4* rowMajor = newMat4();
 	Mat4* columnMajor = newMat4();
@@ -329,10 +470,13 @@ int main() {
 	}
 
 	printf("product\n");
-	Mat4* retVal = rowMajor->multiplyMat4(rowMajor, columnMajor);
+	AffineTransformation* at = getAffineTransformation();
+
+	Mat4* retVal = at->multiplyMat4(rowMajor, columnMajor);
 	for (int y = 0; y < 4; y++) {
 		for (int x = 0; x < 4; x++) {
 			printf("%.2f\n", retVal->mat[x][y]);
 		}
 	}
 }
+*/

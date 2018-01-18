@@ -5,9 +5,9 @@ layout(location = 0) in vec3 vertexPosition_modelspace;
 
 out vec3 colorvarying;
 
-//Input uniform specifying 
 uniform float val;
 uniform ivec4 vectorTest;
+uniform mat3 zrotation;
 
 void main(){
 
@@ -16,8 +16,8 @@ void main(){
 		 -sin(val), cos(val), 0,
 		 0, 0, 0);
 
-    gl_Position = vec4(vertexPosition_modelspace * A, 1);
+    gl_Position = vec4(vertexPosition_modelspace * zrotation, 1);
 
-    colorvarying = vectorTest.xyz; 
+    colorvarying = vectorTest.yyy;
 }
 
