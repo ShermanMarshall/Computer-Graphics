@@ -1,0 +1,23 @@
+#version 330 core
+
+// Input vertex data, different for all executions of this shader.
+layout(location = 0) in vec3 vertexPosition_modelspace;
+
+out vec3 colorvarying;
+
+void main(){
+
+    gl_Position.xyz = vertexPosition_modelspace;
+    gl_Position.w = 1.0;
+	
+    int num = gl_VertexID % 3;
+
+    if (num == 0) {
+	colorvarying = vec3(1,0,0);
+    } else if (num == 1) {
+	colorvarying = vec3(0,1,0);
+    } else {
+	colorvarying = vec3(0,0,1);
+    }
+}
+
