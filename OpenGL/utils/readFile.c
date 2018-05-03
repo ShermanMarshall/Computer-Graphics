@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <commonImprovements.h>
 
 char* readFile(const char* filename) {
 	//Defining input max for fread
 	size_t MAX_READ = 1024;
 
-	char* data = (char*) malloc(SIZEOF_CHAR * MAX_READ); 
+	char* data = (char*) malloc(MAX_READ); 
 	char* tmp = NULL;
 
-	//Create (Non-RAAI) file pointer
+	//Create file pointer
 	FILE* filePtr = fopen(filename, "r");
 	size_t stringSize = 0;
 
@@ -43,19 +41,21 @@ char* readFile(const char* filename) {
 					freeAndSwap = 0;
 				}
 				
-				//Copy a new string
-				char* out = strcpy((char*) malloc(SIZEOF_CHAR * (stringSize + bytesRead)), data);
 				stringSize += bytesRead;
+				
+				//Copy a new string
+				char* out = strcpy((char*) malloc(stringSize), data);
 				
 				if (freeAndSwap) {
 					free(data);
 					data = out;
 				}
-				printf("%s\n", data);
+				//printf("%s\n", data);
 			}
 
 		} while (bytesRead > 0);
 		
+		//Close file and dereference
 		fclose(filePtr);
 		return data;
 	}
@@ -63,7 +63,7 @@ char* readFile(const char* filename) {
 	return NULL;
 }
 
-int main() {
-	char* str = readFile("fileToReadGoesHere");
+int main(int argc, char** argv) {
+	char* str = readFile(argv[1]);
 	printf("%s\n", str);
 }
