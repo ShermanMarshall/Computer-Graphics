@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+<title>RL Block Breaker</title>
+</head>
+<body>
+<div id='stats' class='offset'>
+	<p id='lives_remaining' class='offset'>Blocks: <span id='num_blocks'></span></p>
+	<p id='score_board' class='offset'>Score: <span id='score'> </span></p>
+</div>
+<canvas id='canvas' class='offset'></canvas>
+</body>
+<style>
+	* { 
+		margin: 0;
+		padding: 0
+	}
+	div { 
+		margin: 0.5%;
+		padding: 0;
+	}
+	canvas { 
+		margin-left: 0.5%; 
+	}
+	#lives_remaining {
+		float: left;
+	}
+	#score_board {
+		float: right;
+		margin-right: 5%;
+	}
+	span {
+		display: inline;
+	}
+</style>
+<script src='utils.js'></script>
+<script src='blockbreaker.js'></script> 
+
+</html>

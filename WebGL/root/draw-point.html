@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<title>Draw Point</title>
+</head>
+<body>
+<canvas id='canvas'></canvas>
+</body>
+
+<script src='utils.js'></script>
+<script> 
+
+var glCtx = initContext();
+if (glCtx) {
+
+	glCtx.clearColor(0.0, 0.0, 0.0, 1.0);
+	glCtx.clear(glCtx.COLOR_BUFFER_BIT);
+
+	var vertexShaderSource = 
+		`void main() {
+			gl_Position = vec4(0.5, 0.5, 0.0, 1.0);
+			gl_PointSize = 10.0;
+		}`;
+
+	var fragmentShaderSource = 
+		`void main() {
+			gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+		}`;
+
+	var program = createProgram(glCtx, vertexShaderSource, fragmentShaderSource);
+
+	glCtx.useProgram(program);
+	glCtx.drawArrays(glCtx.GL_POINTS, 0, 1);
+
+}
+
+</script>
+</html>
