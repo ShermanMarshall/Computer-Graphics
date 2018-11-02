@@ -210,9 +210,7 @@ class Projectile {
 	isIntersectingRow(block) {
 		var upper = block.yPos;
 		var lower = block.yPos - pointSpread;
-		if ((this.yPos < upper) && (this.yPos > lower)) {
-			return true;
-		}
+		return ((this.yPos < upper) && (this.yPos > lower));
 	}
 	isIntersecting(block) {
 		var upper = block.yPos;
