@@ -225,6 +225,7 @@ class Projectile {
 			this.update(true);
 			return true;
 		}
+		return false;
 	}
 	alterAngle() {
 		if (this.quadrant == 1) {
