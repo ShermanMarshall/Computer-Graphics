@@ -1,5 +1,1 @@
-I have one goal for the conclusion of this year... 
-
-A humanoid, for future testing of neural networks. This goal may change... given the domain (computer graphics is wicked difficult, and I am already a masochist who tries to do things the hard way (in C)). 
-
-In time I hope someone will find this beneficial...
+Some tests and simple apps using the various \*Gl libs
