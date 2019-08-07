@@ -13,7 +13,6 @@ function tree(theta, radius, height) {
         new THREE.Vector3(1.5, 7.5, 0)
     );
     var quadMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0xff0000), lineWidth: 1 });
-    //var quadGeom = new THREE.Path(curve.getPoints(50)).createPointsGeometry(50);
     var quadGeom = new THREE.Geometry();
     quadGeom.vertices = curve.getPoints(50);
 
@@ -36,13 +35,6 @@ function tree(theta, radius, height) {
         }
     }
 
-    //console.log(quadGeom.vertices);
-    //quadGeom.vertices = quadCurve.getPoints(50);
-
-    //var line2 = new THREE.Line(quadGeom, quadMat);
-    //line2.position.set(0,0,0);  
-    //scene.add(line2);
-
     var test, near = false, far = false;
     while (true) {
         var branch = verts[Math.round(Math.random() * (verts.length-1))];
@@ -58,12 +50,12 @@ function tree(theta, radius, height) {
         ),                
         new THREE.Vector3(
             delta.x + ((delta.x) * ((Math.random() * 3) > 1.5 ? -1 : 1) * (Math.random() * 3)), 
-            delta.y,// + (delta.y * ((Math.random() * 3) > 1.5 ? -1 : 1) * (Math.random() * 3)), 
+            delta.y,
             delta.z + ((delta.z) * ((Math.random() * 3) > 1.5 ? -1 : 1) * (Math.random() * 3))
         ),        
         new THREE.Vector3(
             delta.x + ((delta.x) * ((Math.random() * 3) > 1.5 ? -1 : 1) * (Math.random() * 3)), 
-            delta.y,// + ((delta.y) * ((Math.random() * 3) > 1.5 ? -1 : 1) * (Math.random() * 3)), 
+            delta.y,
             delta.z + ((delta.z) * ((Math.random() * 3) > 1.5 ? -1 : 1) * (Math.random() * 3))
         )
     );
@@ -71,17 +63,11 @@ function tree(theta, radius, height) {
 
     var branchLine = new THREE.Geometry();
     branchLine.vertices = aCurve.getPoints(50);
-    //curve2 = lineGeom2.vertices;
-    //console.log(lineGeom);
+    
     var line2 = new THREE.Line(branchLine, 
         new THREE.LineBasicMaterial({ color: 0xf4a460, linewidth: 1 })
     );
-    /*
-    console.log(branch);
-    verts = [];
-    faces = [];
-    facePtr = 0;
-    */
+    
     for (var points = 0, rate=theta/2; points < (branchLine.vertices.length - (rate + 1)); points+=rate) {
         for (var x = 0; x < 360; x+=factor) {
             
@@ -95,52 +81,6 @@ function tree(theta, radius, height) {
             
             faces.push(new THREE.Face3(facePtr++, facePtr++, facePtr++));
             faces.push(new THREE.Face3(facePtr++, facePtr++, facePtr++));
-            
-            /*
-            verts.push(Utils.rotatex(Utils.rotatey(Utils.rotatez(branchLine.vertices[points], x, true), x, true), x, true));
-            verts.push(Utils.rotatex(Utils.rotatey(Utils.rotatez(branchLine.vertices[points+rate], x, true), x, true), x, true));
-            verts.push(Utils.rotatex(Utils.rotatey(Utils.rotatez(branchLine.vertices[points+rate], x+factor, true), x+factor, true), x+factor, true));
-            
-            verts.push(Utils.rotatex(Utils.rotatey(Utils.rotatez(branchLine.vertices[points], x+factor, true), x+factor, true), x+factor, true));
-            verts.push(Utils.rotatex(Utils.rotatey(Utils.rotatez(branchLine.vertices[points], x, true), x, true), x, true));
-            verts.push(Utils.rotatex(Utils.rotatey(Utils.rotatez(branchLine.vertices[points+rate], x+factor, true), x+factor, true), x+factor, true));
-            
-            faces.push(new THREE.Face3(facePtr++, facePtr++, facePtr++));
-            faces.push(new THREE.Face3(facePtr++, facePtr++, facePtr++));
-            */
-	    
-            /*
-            verts.push(new THREE.Vector3(
-                Math.cos(rad * x) * branchLine.vertices[points].x,
-                branchLine.vertices[points].y,
-                Math.sin(rad * x)// * quadGeom.vertices[points].z
-            ));
-            verts.push(new THREE.Vector3(
-                Math.cos(rad * x) * branchLine.vertices[points+rate].x,
-                branchLine.vertices[points+rate].y,
-                Math.sin(rad * x)// * quadGeom.vertices[points+rate].z
-            ));
-            verts.push(new THREE.Vector3(
-                Math.cos(rad * (x+factor)) * branchLine.vertices[points+rate].x,
-                branchLine.vertices[points+rate].y,
-                Math.sin(rad * (x+factor))// * quadGeom.vertices[points+rate].z
-            ));
-            verts.push(new THREE.Vector3(
-                Math.cos(rad * (x+factor)) * branchLine.vertices[points].x,
-                branchLine.vertices[points].y,
-                Math.sin(rad * (x+factor))// * quadGeom.vertices[points+rate].z
-            ));
-            verts.push(new THREE.Vector3(
-                Math.cos(rad * x) * branchLine.vertices[points].x,
-                branchLine.vertices[points].y,
-                Math.sin(rad * x)// * quadGeom.vertices[points+rate].z
-            ));
-            verts.push(new THREE.Vector3(
-                Math.cos(rad * (x+factor)) * branchLine.vertices[points+rate].x,
-                branchLine.vertices[points+rate].y,
-                Math.sin(rad * (x+factor))// * quadGeom.vertices[points+rate].z
-            ));
-            */            
         }
     }
     

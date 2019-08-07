@@ -96,25 +96,6 @@ Utils.prototype.rotatez = function(vector, angle, x, y) {
     );
 };
 
-Utils.prototype.rotatew = function(vector, angle) {
-    //Get vector magnitude
-    var magnitude = this.findMagnitude(vector);
-    //Find unit vector based on magnitude
-    var uv = {
-        x: vector.x/magnitude,
-        y: vector.y/magnitude,
-        z: vector.z/magnitude
-    };
-    //
-    //vector.x+=.5, vector.y+=.5, vector.z+=.5;
-    var xn = 0, yn = 0, zn = 0;
-    return new THREE.Vector3(
-        (((1+((1-Math.cos(angle))*(Math.pow(uv.x,2)-1)))*(vector.x+xn))+(((-1*uv.z*Math.sin(angle))+((1-Math.cos(angle))*uv.x*uv.y))*(vector.y+yn))+((((uv.y*Math.sin(angle))+((1-Math.cos(angle))*uv.x*uv.z)))*(vector.z+zn))),
-        ((((uv.z*Math.sin(angle))+((1-Math.cos(angle))*uv.y*uv.x))*(vector.x+xn))+((1+((1-Math.cos(angle))*(Math.pow(uv.y,2)-1)))*(vector.y+yn))+(((-1*uv.x*Math.sin(angle))+((1-Math.cos(angle))*uv.y*uv.z))*(vector.z+zn))),
-        (((-1*uv.y*Math.sin(angle))+((1-Math.cos(angle))*uv.z*uv.x))*(vector.x+xn))+(((uv.x*Math.sin(angle))+(1-Math.cos(angle))*uv.z*uv.y)*(vector.y+yn))+((1+((1-Math.cos(angle)))*(Math.pow(uv.z,2)-1))*(vector.z+zn))
-    );
-};
-
 Utils.prototype.rotateww = function(vector1, vector2, angle) {
         var v1 = vector1;
 	var v2 = vector2;

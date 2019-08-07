@@ -98,7 +98,7 @@
         //console.log(mesh.material);
         
         //var test = frog();
-        for (var y = 0; y < mesh.geometry.faces.length; y++)
+        for (var y = 0; y < faces.length; y++)
             for (var x = 0; x < 3; x++) {
                 var c = new THREE.Color(Math.random() * 0xffffff);
                 mesh.geometry.faces[y].vertexColors[x] = c;
@@ -197,8 +197,8 @@
         //var otherMat = new THREE.MeshLamber
         
         
-        treeGeometry.vertices = tree.vertices;
-        treeGeometry.faces = tree.faces;
+        treeGeometry.vertices = tree.geom.vertices;
+        treeGeometry.faces = tree.geom.faces;
 	console.log(treeGeometry.faces.length);
         for (var x = 0; x < treeGeometry.faces.length; x++) {
             for (var y = 0; y < 3; y++) {
